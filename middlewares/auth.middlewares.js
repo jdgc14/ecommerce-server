@@ -73,9 +73,20 @@ const protectOrderOwner = (req, res, next) => {
     next()
 }
 
+const protectProductOwner = (req, res, next) => {
+    const { sessionUser, product } = req
+
+    if (sessionUser.id !== product.userId) {
+        return next(new AppError('This product does not belong to you.', 403))
+    }
+
+    next()
+}
+
 module.exports = {
     protectSession,
     protectUsersAccount,
     protectAdmin,
     protectOrderOwner,
+    protectProductOwner,
 }
