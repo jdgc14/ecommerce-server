@@ -28,6 +28,7 @@ const protectSession = catchAsync(async (req, res, next) => {
 
     const user = await User.findOne({
         where: { id: decoded.id, status: 'active' },
+        attributes: { exclude: ['password'] },
     })
 
     if (!user) {
@@ -62,8 +63,19 @@ const protectAdmin = (req, res, next) => {
     next()
 }
 
+const protectOrderOwner = (req, res, next) => {
+    const { sessionUser, order } = req
+
+    if (sessionUser.id !== order.userId) {
+        return next(new AppError('This order does not belong to you.', 403))
+    }
+
+    next()
+}
+
 module.exports = {
     protectSession,
     protectUsersAccount,
     protectAdmin,
+    protectOrderOwner,
 }

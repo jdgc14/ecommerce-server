@@ -4,6 +4,8 @@ const dotenv = require('dotenv')
 
 // Models
 const { User } = require('../models/user.model')
+const { Order } = require('../models/order.model')
+const { Product } = require('../models/product.model')
 
 // Utils
 const { catchAsync } = require('../utils/catchAsync.util')
@@ -25,20 +27,15 @@ const getAllUsers = catchAsync(async (req, res, next) => {
 })
 
 const createUser = catchAsync(async (req, res, next) => {
-    const { name, email, password, role } = req.body
-
-    if (role !== 'admin' && role !== 'normal') {
-        return next(new AppError('Invalid role', 400))
-    }
+    const { username, email, password } = req.body
 
     const salt = await bcrypt.genSalt(12)
     const hashedPassword = await bcrypt.hash(password, salt)
 
     const newUser = await User.create({
-        name,
+        username,
         email,
         password: hashedPassword,
-        role,
     })
 
     newUser.password = undefined
@@ -50,10 +47,10 @@ const createUser = catchAsync(async (req, res, next) => {
 })
 
 const updateUser = catchAsync(async (req, res, next) => {
-    const { name } = req.body
+    const { username } = req.body
     const { user } = req
 
-    await user.update({ name })
+    await user.update({ username })
 
     res.status(200).json({
         status: 'success',
@@ -92,10 +89,26 @@ const login = catchAsync(async (req, res, next) => {
     })
 })
 
+const getUserProducts = catchAsync(async (req, res, next) => {
+    const { sessionUser } = req
+
+    const userProducts = await User.findOne({
+        where: { id: sessionUser.id },
+        attributes: { exclude: ['password'] },
+        include: { model: Product },
+    })
+
+    res.status(200).json({
+        status: 'success',
+        data: { userProducts },
+    })
+})
+
 module.exports = {
     getAllUsers,
     createUser,
     updateUser,
     deleteUser,
     login,
+    getUserProducts,
 }
