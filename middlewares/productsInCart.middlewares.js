@@ -82,8 +82,21 @@ const checkNewQuantityIsZero = catchAsync(async (req, res, next) => {
     next()
 })
 
+// This function check quantity of products in stock
+const checkQuantity = catchAsync(async (req, res, next) => {
+    const { product } = req
+
+    const quantity = req.body.quantity || req.body.newQty
+
+    if (product.quantity < quantity) {
+        return next(new AppError("We don't have enough quantity in stock", 400))
+    }
+
+    next()
+})
 module.exports = {
     checkProductInCart,
     checkProductInCartExists,
     checkNewQuantityIsZero,
+    checkQuantity,
 }

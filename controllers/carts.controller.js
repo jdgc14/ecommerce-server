@@ -1,5 +1,7 @@
 // Models
 const { Cart } = require('../models/cart.model')
+const { Order } = require('../models/order.model')
+const { Product } = require('../models/product.model')
 const { ProductInCart } = require('../models/productInCart.model')
 
 // Utils
@@ -17,7 +19,7 @@ const addProductToCart = catchAsync(async (req, res, next) => {
         quantity,
     })
 
-    res.status(200).json({
+    res.status(201).json({
         status: 'success',
         data: {
             cart,
@@ -56,10 +58,52 @@ const deleteProductInCartById = catchAsync(async (req, res, next) => {
     })
 })
 
-const purchaseCart = catchAsync(async (req, res, next) => {})
+const purchaseCart = catchAsync(async (req, res, next) => {
+    const { sessionUser, cart } = req
+
+    const productsInCart = await ProductInCart.findAll({
+        where: { cartId: cart.id, status: 'active' },
+    })
+
+    let totalPrice = 0
+
+    const productsInCartPromises = productsInCart.map(async (productInCart) => {
+        const product = await Product.findOne({
+            where: { id: productInCart.productId },
+        })
+
+        const subTotal = product.price * productInCart.quantity
+
+        const newQuantity = product.quantity - productInCart.quantity
+
+        totalPrice += subTotal
+
+        await product.update({ quantity: newQuantity })
+
+        await productInCart.update({ status: 'purchased' })
+    })
+
+    await cart.update({
+        status: 'purchased',
+    })
+
+    await Promise.all(productsInCartPromises)
+
+    const order = await Order.create({
+        userId: sessionUser.id,
+        cartId: cart.id,
+        totalPrice,
+    })
+
+    res.status(201).json({
+        status: 'success',
+        data: { order },
+    })
+})
 
 module.exports = {
     addProductToCart,
     updateProductInCart,
     deleteProductInCartById,
+    purchaseCart,
 }

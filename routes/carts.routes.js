@@ -5,13 +5,11 @@ const {
     addProductToCart,
     updateProductInCart,
     deleteProductInCartById,
+    purchaseCart,
 } = require('../controllers/carts.controller')
 
 // Middlewares
-const {
-    cartIsActive,
-    checkQuantity,
-} = require('../middlewares/carts.middlewares')
+const { cartIsActive } = require('../middlewares/carts.middlewares')
 
 const { protectSession } = require('../middlewares/auth.middlewares')
 
@@ -21,6 +19,7 @@ const {
     checkProductInCart,
     checkProductInCartExists,
     checkNewQuantityIsZero,
+    checkQuantity,
 } = require('../middlewares/productsInCart.middlewares')
 
 // Validators
@@ -62,6 +61,6 @@ cartsRouter.delete(
     deleteProductInCartById
 )
 
-cartsRouter.post('/purchase')
+cartsRouter.post('/purchase', cartIsActive, purchaseCart)
 
 module.exports = { cartsRouter }
