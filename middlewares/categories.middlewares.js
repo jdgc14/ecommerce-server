@@ -6,7 +6,7 @@ const { catchAsync } = require('../utils/catchAsync.util')
 const { AppError } = require('../utils/appError.util')
 
 const categoryExists = catchAsync(async (req, res, next) => {
-    const { id } = req.params
+    const id = req.params.id || req.body.categoryId
 
     const category = await Category.findOne({
         where: { id },

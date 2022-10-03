@@ -51,6 +51,7 @@ productsRouter.post(
     '/',
     upload.array('productImg', 5),
     createProductValidators,
+    categoryExists,
     createProduct
 )
 

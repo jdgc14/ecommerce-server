@@ -9,7 +9,7 @@ const productExists = catchAsync(async (req, res, next) => {
     const id = req.params.id || req.body.productId || req.params.productId
 
     const product = await Product.findOne({
-        where: { id, status: 'active' },
+        where: { id },
     })
 
     if (!product) {

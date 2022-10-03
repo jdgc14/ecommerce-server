@@ -46,27 +46,36 @@ const uploadProductImgs = async (imgs, productId) => {
     await Promise.all(imgsPromises)
 }
 
-const getProductsImgsUrls = async (products) => {
-    const productsWithImgsPromises = products.map(async (product) => {
-        // Get imgs URLs
-        const productImgsPromises = product.productImgs.map(
-            async (productImg) => {
-                const imgRef = ref(storage, productImg.imgUrl)
-                const imgUrl = await getDownloadURL(imgRef)
+// To find imgUrls product by product
+const getProductImgsUrls = async (product) => {
+    const productImgsPromises = product.productImgs.map(async (productImg) => {
+        const imgRef = ref(storage, productImg.imgUrl)
 
-                productImg.imgUrl = imgUrl
-                return productImg
-            }
-        )
+        const imgUrl = await getDownloadURL(imgRef)
 
-        // Resolve imgs urls
-        const productImgs = await Promise.all(productImgsPromises)
+        productImg.imgUrl = imgUrl
 
-        product.productImgs = productImgs
-        return product
+        return productImg
     })
+    const productImgs = await Promise.all(productImgsPromises)
+
+    product.productImgs = productImgs
+
+    return product
+}
+
+const getProductsImgsUrls = async (products) => {
+    const productsWithImgsPromises = products.map(async (product) =>
+        // Return a product whit imgUrls updated
+        getProductImgsUrls(product)
+    )
 
     return await Promise.all(productsWithImgsPromises)
 }
 
-module.exports = { storage, uploadProductImgs, getProductsImgsUrls }
+module.exports = {
+    storage,
+    uploadProductImgs,
+    getProductImgsUrls,
+    getProductsImgsUrls,
+}
