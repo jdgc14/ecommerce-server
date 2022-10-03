@@ -21,8 +21,8 @@ const initModels = () => {
     Cart.belongsTo(User)
 
     // 1 Product <---> 1 Category
-    Product.hasOne(Category)
-    Category.belongsTo(Product, { foreignKey: 'categoryId' })
+    Product.hasOne(Category, { foreignKey: 'categoryId' })
+    Product.belongsTo(Product)
 
     // 1 Product <---> M ProductImg
     Product.hasMany(ProductImg, { foreignKey: 'productId' })

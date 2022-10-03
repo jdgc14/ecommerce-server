@@ -16,7 +16,7 @@ const createProductValidators = [
         .isInt({ min: 1 })
         .withMessage('categoryId must be a integer.'),
     body('quantity')
-        .isInt({ min: 1 })
+        .isInt({ min: 0 })
         .withMessage('Quantity must be a integer.'),
 
     checkValidations,
@@ -35,7 +35,7 @@ const updateProductValidators = [
         .withMessage('Description must be at least 10 characters'),
     body('price').isNumeric().withMessage('Price must be a number'),
     body('quantity')
-        .isInt({ min: 1 })
+        .isInt({ min: 0 })
         .withMessage('Quantity must be a integer.'),
 
     checkValidations,

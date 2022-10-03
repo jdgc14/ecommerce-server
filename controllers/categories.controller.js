@@ -24,6 +24,7 @@ const createCategory = catchAsync(async (req, res, next) => {
 const getActiveCategories = catchAsync(async (req, res, next) => {
     const categories = await Category.findAll({
         where: { status: 'active' },
+        // include: { model: Product },
     })
 
     res.status(200).json({
