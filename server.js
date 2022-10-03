@@ -12,7 +12,7 @@ const startServer = async () => {
     try {
         await db.authenticate()
 
-        // initModels()
+        initModels()
 
         await db.sync()
 

@@ -1,6 +1,6 @@
 const { db, DataTypes } = require('../utils/database.util')
 
-const Order = db.define('Order', {
+const Order = db.define('order', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,

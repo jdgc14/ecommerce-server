@@ -10,6 +10,8 @@ const { Product } = require('../models/product.model')
 // Utils
 const { catchAsync } = require('../utils/catchAsync.util')
 const { AppError } = require('../utils/appError.util')
+const { ProductImg } = require('../models/productImg.model')
+const { getProductsImgsUrls } = require('../utils/firebase.util')
 
 dotenv.config()
 
@@ -92,15 +94,16 @@ const login = catchAsync(async (req, res, next) => {
 const getUserProducts = catchAsync(async (req, res, next) => {
     const { sessionUser } = req
 
-    const userProducts = await User.findOne({
-        where: { id: sessionUser.id },
-        attributes: { exclude: ['password'] },
-        include: { model: Product },
+    const userProducts = await Product.findAll({
+        where: { userId: sessionUser.id },
+        include: { model: ProductImg },
     })
+
+    const productsWithImgs = await getProductsImgsUrls(userProducts)
 
     res.status(200).json({
         status: 'success',
-        data: { userProducts },
+        data: { user: sessionUser, products: productsWithImgs },
     })
 })
 

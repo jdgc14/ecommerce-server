@@ -1,6 +1,6 @@
 const { db, DataTypes } = require('../utils/database.util')
 
-const ProductImg = db.define('ProductImg', {
+const ProductImg = db.define('productImg', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
