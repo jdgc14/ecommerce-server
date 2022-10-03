@@ -4,13 +4,12 @@ const dotenv = require('dotenv')
 
 // Models
 const { User } = require('../models/user.model')
-const { Order } = require('../models/order.model')
 const { Product } = require('../models/product.model')
+const { ProductImg } = require('../models/productImg.model')
 
 // Utils
-const { catchAsync } = require('../utils/catchAsync.util')
 const { AppError } = require('../utils/appError.util')
-const { ProductImg } = require('../models/productImg.model')
+const { catchAsync } = require('../utils/catchAsync.util')
 const { getProductsImgsUrls } = require('../utils/firebase.util')
 
 dotenv.config()
@@ -92,18 +91,32 @@ const login = catchAsync(async (req, res, next) => {
 })
 
 const getUserProducts = catchAsync(async (req, res, next) => {
-    const { sessionUser } = req
+    const { id } = req.sessionUser
 
-    const userProducts = await Product.findAll({
-        where: { userId: sessionUser.id },
-        include: { model: ProductImg },
+    const user = await User.findOne({
+        where: { id },
+        attributes: ['id', 'username', 'email'],
+        include: {
+            model: Product,
+            attributes: {
+                exclude: ['categoryId', 'userId', 'createdAt', 'updatedAt'],
+            },
+            include: {
+                model: ProductImg,
+                required: false,
+                where: { status: 'active' },
+                attributes: ['id', 'imgUrl'],
+            },
+        },
     })
 
-    const productsWithImgs = await getProductsImgsUrls(userProducts)
+    const productsWithImgs = await getProductsImgsUrls(user.products)
+
+    user.products = productsWithImgs
 
     res.status(200).json({
         status: 'success',
-        data: { user: sessionUser, products: productsWithImgs },
+        data: { user },
     })
 })
 

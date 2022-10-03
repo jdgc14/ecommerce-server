@@ -70,6 +70,8 @@ const protectOrderOwner = (req, res, next) => {
         return next(new AppError('This order does not belong to you.', 403))
     }
 
+    order.userId = undefined
+
     next()
 }
 
