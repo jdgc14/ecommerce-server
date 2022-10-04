@@ -15,7 +15,7 @@ const updateProductValidators = [
     body('productId')
         .isInt({ min: 1 })
         .withMessage('productId must be a integer.'),
-    body('newQty').isInt().withMessage('quantity must be a integer.'),
+    body('newQty').isInt().withMessage('newQty must be a integer.'),
 
     checkValidations,
 ]

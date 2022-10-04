@@ -69,13 +69,7 @@ const getProductById = catchAsync(async (req, res, next) => {
     const product = await Product.findOne({
         where: { id },
         attributes: {
-            exclude: [
-                'categoryId',
-                'userId',
-                'createdAt',
-                'updatedAt',
-                'status',
-            ],
+            exclude: ['categoryId', 'userId', 'createdAt', 'updatedAt'],
         },
         include: [
             {

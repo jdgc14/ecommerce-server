@@ -6,8 +6,8 @@ const { Category } = require('../models/category.model')
 const { ProductInCart } = require('../models/productInCart.model')
 
 // Utils
-const { catchAsync } = require('../utils/catchAsync.util')
 const { AppError } = require('../utils/appError.util')
+const { catchAsync } = require('../utils/catchAsync.util')
 
 const orderExists = catchAsync(async (req, res, next) => {
     const { id } = req.params

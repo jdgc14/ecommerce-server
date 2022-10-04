@@ -2,8 +2,8 @@
 const { Category } = require('../models/category.model')
 
 // Utils
-const { catchAsync } = require('../utils/catchAsync.util')
 const { AppError } = require('../utils/appError.util')
+const { catchAsync } = require('../utils/catchAsync.util')
 
 const categoryExists = catchAsync(async (req, res, next) => {
     const id = req.params.id || req.body.categoryId

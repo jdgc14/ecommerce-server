@@ -1,10 +1,9 @@
 // Models
-const { Product } = require('../models/product.model')
 const { ProductInCart } = require('../models/productInCart.model')
 
 // Utils
-const { catchAsync } = require('../utils/catchAsync.util')
 const { AppError } = require('../utils/appError.util')
+const { catchAsync } = require('../utils/catchAsync.util')
 
 const checkProductInCart = catchAsync(async (req, res, next) => {
     const { productId, quantity } = req.body

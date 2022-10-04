@@ -26,10 +26,9 @@ const firebaseApp = initializeApp(firebaseConfig)
 const storage = getStorage(firebaseApp)
 
 const uploadProductImgs = async (imgs, productId) => {
-    // Map async -> Async operations with arrays
     const imgsPromises = imgs.map(async (img) => {
         // Create firebase reference
-        const [originalName, ext] = img.originalname.split('.') // -> [pug, jpg]
+        const [originalName, ext] = img.originalname.split('.')
 
         const filename = `products/${productId}/${originalName}-${Date.now()}.${ext}`
         const imgRef = ref(storage, filename)
