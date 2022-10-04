@@ -1,9 +1,9 @@
 const { app } = require('./app')
 
 // Utils
+const dotenv = require('dotenv')
 const { db } = require('./utils/database.util')
 const { initModels } = require('./models/initModels')
-const dotenv = require('dotenv')
 
 dotenv.config()
 
@@ -15,7 +15,7 @@ const startServer = async () => {
 
         await db.sync()
 
-        const PORT = 4000
+        const PORT = process.env.PORT || 4000
 
         app.listen(PORT, () => {
             console.log('Express app running!')
