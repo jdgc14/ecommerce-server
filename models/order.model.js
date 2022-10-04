@@ -1,6 +1,6 @@
 const { db, DataTypes } = require('../utils/database.util')
 
-const Order = db.define('Order', {
+const Order = db.define('order', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -16,13 +16,13 @@ const Order = db.define('Order', {
         allowNull: false,
     },
     totalPrice: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: false,
     },
     status: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 'active',
+        defaultValue: 'purchased',
     },
 })
 

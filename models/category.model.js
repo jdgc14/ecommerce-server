@@ -1,6 +1,6 @@
 const { db, DataTypes } = require('../utils/database.util')
 
-const Category = db.define('Category', {
+const Category = db.define('category', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,

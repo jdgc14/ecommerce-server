@@ -1,6 +1,6 @@
 const { db, DataTypes } = require('../utils/database.util')
 
-const ProductInCart = db.define('ProductInCart', {
+const ProductInCart = db.define('productInCart', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,

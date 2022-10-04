@@ -4,10 +4,13 @@ const dotenv = require('dotenv')
 
 // Models
 const { User } = require('../models/user.model')
+const { Product } = require('../models/product.model')
+const { ProductImg } = require('../models/productImg.model')
 
 // Utils
-const { catchAsync } = require('../utils/catchAsync.util')
 const { AppError } = require('../utils/appError.util')
+const { catchAsync } = require('../utils/catchAsync.util')
+const { getProductsImgsUrls } = require('../utils/firebase.util')
 
 dotenv.config()
 
@@ -25,20 +28,15 @@ const getAllUsers = catchAsync(async (req, res, next) => {
 })
 
 const createUser = catchAsync(async (req, res, next) => {
-    const { name, email, password, role } = req.body
-
-    if (role !== 'admin' && role !== 'normal') {
-        return next(new AppError('Invalid role', 400))
-    }
+    const { username, email, password } = req.body
 
     const salt = await bcrypt.genSalt(12)
     const hashedPassword = await bcrypt.hash(password, salt)
 
     const newUser = await User.create({
-        name,
+        username,
         email,
         password: hashedPassword,
-        role,
     })
 
     newUser.password = undefined
@@ -50,10 +48,10 @@ const createUser = catchAsync(async (req, res, next) => {
 })
 
 const updateUser = catchAsync(async (req, res, next) => {
-    const { name } = req.body
+    const { username } = req.body
     const { user } = req
 
-    await user.update({ name })
+    await user.update({ username })
 
     res.status(200).json({
         status: 'success',
@@ -92,10 +90,41 @@ const login = catchAsync(async (req, res, next) => {
     })
 })
 
+const getUserProducts = catchAsync(async (req, res, next) => {
+    const { id } = req.sessionUser
+
+    const user = await User.findOne({
+        where: { id },
+        attributes: ['id', 'username', 'email'],
+        include: {
+            model: Product,
+            attributes: {
+                exclude: ['categoryId', 'userId', 'createdAt', 'updatedAt'],
+            },
+            include: {
+                model: ProductImg,
+                required: false,
+                where: { status: 'active' },
+                attributes: ['id', 'imgUrl'],
+            },
+        },
+    })
+
+    const productsWithImgs = await getProductsImgsUrls(user.products)
+
+    user.products = productsWithImgs
+
+    res.status(200).json({
+        status: 'success',
+        data: { user },
+    })
+})
+
 module.exports = {
     getAllUsers,
     createUser,
     updateUser,
     deleteUser,
     login,
+    getUserProducts,
 }

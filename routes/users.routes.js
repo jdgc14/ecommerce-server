@@ -1,5 +1,8 @@
 const express = require('express')
 
+// Routers
+const { ordersRouter } = require('./orders.routes')
+
 // Controllers
 const {
     getAllUsers,
@@ -7,6 +10,7 @@ const {
     updateUser,
     deleteUser,
     login,
+    getUserProducts,
 } = require('../controllers/users.controller')
 
 // Middlewares
@@ -35,5 +39,9 @@ usersRouter.get('/', protectAdmin, getAllUsers)
 usersRouter.patch('/:id', userExists, protectUsersAccount, updateUser)
 
 usersRouter.delete('/:id', userExists, protectUsersAccount, deleteUser)
+
+usersRouter.get('/me', getUserProducts)
+
+usersRouter.use('/orders', ordersRouter)
 
 module.exports = { usersRouter }

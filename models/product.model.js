@@ -1,6 +1,6 @@
 const { db, DataTypes } = require('../utils/database.util')
 
-const Product = db.define('Product', {
+const Product = db.define('product', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -20,7 +20,7 @@ const Product = db.define('Product', {
         allowNull: false,
     },
     price: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: false,
     },
     categoryId: {
