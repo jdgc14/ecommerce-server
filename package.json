@@ -1,14 +1,14 @@
 {
-    "name": "security-basics",
+    "name": "ecommerce-server-jdgc14",
     "version": "1.0.0",
-    "description": "A simple Express server",
+    "description": "This is a server for a ecommerce app",
     "main": "index.js",
     "engines": {
         "node": "16.x"
     },
     "scripts": {
         "start": "node server.js",
-        "start-dev": "nodemon server.js"
+        "start:dev": "nodemon server.js"
     },
     "author": "jdgc14",
     "license": "ISC",
