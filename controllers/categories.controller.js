@@ -4,7 +4,6 @@ const { Product } = require('../models/product.model')
 
 // Utils
 const { catchAsync } = require('../utils/catchAsync.util')
-const { AppError } = require('../utils/appError.util')
 
 const createCategory = catchAsync(async (req, res, next) => {
     const { name } = req.body
@@ -24,7 +23,20 @@ const createCategory = catchAsync(async (req, res, next) => {
 const getActiveCategories = catchAsync(async (req, res, next) => {
     const categories = await Category.findAll({
         where: { status: 'active' },
-        // include: { model: Product },
+        attributes: ['id', 'name'],
+        include: {
+            model: Product,
+            where: { status: 'active' },
+            attributes: {
+                exclude: [
+                    'categoryId',
+                    'userId',
+                    'status',
+                    'createdAt',
+                    'updatedAt',
+                ],
+            },
+        },
     })
 
     res.status(200).json({

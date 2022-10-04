@@ -24,7 +24,7 @@ const {
 // Validators
 const {
     createUserValidators,
-} = require('../middlewares/validators.middlewares')
+} = require('../middlewares/usersValidators.middlewares')
 
 const usersRouter = express.Router()
 
