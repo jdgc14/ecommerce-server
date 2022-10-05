@@ -2,6 +2,7 @@ const express = require('express')
 
 // Controllers
 const {
+    getProductsInCart,
     addProductToCart,
     updateProductInCart,
     deleteProductInCartById,
@@ -31,6 +32,8 @@ const {
 const cartsRouter = express.Router()
 
 cartsRouter.use(protectSession)
+
+cartsRouter.get('/', cartIsActive, getProductsInCart)
 
 cartsRouter.post(
     '/add-product',

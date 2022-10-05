@@ -44,7 +44,6 @@ productsRouter.get('/categories', getActiveCategories)
 
 productsRouter.get('/:id', productExists, getProductById)
 
-// EndPoints protecteds
 productsRouter.use(protectSession)
 
 productsRouter.post(

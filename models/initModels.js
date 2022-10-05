@@ -20,7 +20,7 @@ const initModels = () => {
     User.hasOne(Cart, { foreignKey: 'userId' })
     Cart.belongsTo(User)
 
-    // 1 Product <---> 1 Category
+    // 1 Category <---> M Product
     Category.hasMany(Product, { foreignKey: 'categoryId' })
     Product.belongsTo(Category)
 

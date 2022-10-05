@@ -1,10 +1,32 @@
 // Models
+const { Cart } = require('../models/cart.model')
 const { Order } = require('../models/order.model')
 const { Product } = require('../models/product.model')
 const { ProductInCart } = require('../models/productInCart.model')
 
 // Utils
 const { catchAsync } = require('../utils/catchAsync.util')
+
+const getProductsInCart = catchAsync(async (req, res, next) => {
+    const cart = await Cart.findOne({
+        where: { status: 'active' },
+        attributes: ['id', 'userId'],
+        include: {
+            model: ProductInCart,
+            required: false,
+            attributes: ['id', 'quantity'],
+            include: {
+                model: Product,
+                attributes: ['id', 'title', 'description', 'price'],
+            },
+        },
+    })
+
+    res.status(200).json({
+        status: 'success',
+        data: { cart },
+    })
+})
 
 const addProductToCart = catchAsync(async (req, res, next) => {
     const { productId, quantity } = req.body
@@ -20,7 +42,6 @@ const addProductToCart = catchAsync(async (req, res, next) => {
     res.status(201).json({
         status: 'success',
         data: {
-            cart,
             productInCart,
         },
     })
@@ -98,6 +119,7 @@ const purchaseCart = catchAsync(async (req, res, next) => {
 })
 
 module.exports = {
+    getProductsInCart,
     addProductToCart,
     updateProductInCart,
     deleteProductInCartById,
